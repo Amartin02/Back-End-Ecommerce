@@ -8,20 +8,20 @@ class ProductTag extends Model {}
 ProductTag.init(
   {
     id: {
-      DataTypes: INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
       autoIncrement: true,
     },
     product_id: {
-      DataTypes: INTEGER,
+      type: DataTypes.INTEGER,
       references: {
         model: product,
         key: "product_id",
       },
     },
     tag_id: {
-      DataTypes: INTEGER,
+      type: DataTypes.INTEGER,
       references: {
         model: tag,
         key: "tag_id",
