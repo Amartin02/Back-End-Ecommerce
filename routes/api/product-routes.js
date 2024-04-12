@@ -8,9 +8,12 @@ router.get("/", async (req, res) => {
   // find all products
   try {
     const products = await Product.findAll({
-      include: [{ model: Category }, { model: Tag }],
+      include: [
+        { model: Category },
+        { model: Tag, through: ProductTag, as: "product_tags" },
+      ],
     });
-    res.json(products);
+    res.status(200).json(products);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -18,11 +21,10 @@ router.get("/", async (req, res) => {
 });
 
 // get one product
-router.get("/", async (req, res) => {
-  // find all products
+router.get("/:id", async (req, res) => {
   // be sure to include its associated Category and Tag data
   try {
-    const productsData = await Product.findAll({
+    const productsData = await Product.findByPk(req.params.id, {
       include: [
         { model: Category },
         { model: Tag, through: ProductTag, as: "product_tags" },
@@ -46,6 +48,7 @@ router.post("/", (req, res) => {
   */
   Product.create(req.body)
     .then((product) => {
+      console.log(product);
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
       if (req.body.tagIds.length) {
         const productTagIdArr = req.body.tagIds.map((tag_id) => {

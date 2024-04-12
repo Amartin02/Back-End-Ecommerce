@@ -6,7 +6,9 @@ const { increment } = require("../../models/Category");
 
 router.get("/", async (req, res) => {
   try {
-    const tagData = await Tag.findAll({ include: [{ model: Tag }] });
+    const tagData = await Tag.findAll({
+      include: [{ model: Product, through: ProductTag, as: "tag_products" }],
+    });
     res.status(200).json(tagData);
   } catch (err) {
     res.status(500).json(err);
@@ -18,7 +20,7 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const tagData = await Tag.findByPk(req.params.id, {
-      include: [{ model: Tag }],
+      include: [{ model: Product, through: ProductTag, as: "tag_products" }],
     });
     res.status(200).json(tagData);
   } catch (err) {
@@ -48,6 +50,7 @@ router.put("/:id", async (req, res) => {
         where: { id: req.params.id },
       }
     );
+    res.status(200).json(tagData);
   } catch (err) {
     res.status(500).json(err);
   }
